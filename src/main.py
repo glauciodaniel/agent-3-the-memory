@@ -1,6 +1,10 @@
 import asyncio
 import logging
 
+from dotenv import load_dotenv
+
+load_dotenv(override=True)
+
 from src.agent_router import StatefulFinanceAgent
 from src.memory_gateway import LongTermMemoryGateway
 from src.session_gateway import NegotiationSessionGateway
@@ -11,7 +15,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s - %(message)s")
 
 async def run_lab_async() -> None:
     print("=" * 60)
-    print("🚗 Agente 3: The Memory - Demonstração FSM e FinOps")
+    print("Agente 3: The Memory - Demonstracao FSM e FinOps")
     print("=" * 60)
 
     session_id = "sessao_premium_998877"
@@ -27,12 +31,12 @@ async def run_lab_async() -> None:
         "Ainda acho alto. Não vou fechar o financiamento assim.",
     ]
 
-    print(f"\n[SISTEMA] Iniciando recuperação de Checkpoint (Sessão: {session_id})...")
+    print(f"\n[SISTEMA] Iniciando recuperacao de Checkpoint (Sessao: {session_id})...")
 
     total_cost = 0.0
     for i, msg in enumerate(messages, 1):
         print(f"\n[Turno {i}]")
-        print(f"👤 Cliente: {msg}")
+        print(f"Cliente: {msg}")
 
         response_text = await agent.process_message(
             session_id=session_id,
@@ -40,7 +44,7 @@ async def run_lab_async() -> None:
             customer_tier="premium",
         )
 
-        print(f"🤖 Agente: {response_text}")
+        print(f"Agente: {response_text}")
         cost = telemetry.calculate_stateful_cost(msg, response_text)
         total_cost += cost
 

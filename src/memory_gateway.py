@@ -35,7 +35,7 @@ class LongTermMemoryGateway:
 
         self.is_mock = not bool(self.index_endpoint)
         if not self.is_mock:
-            from google_adk.memory import VertexAiMemoryBankService
+            from google.adk.memory import VertexAiMemoryBankService
 
             self.service = VertexAiMemoryBankService(
                 project_id=self.project_id,

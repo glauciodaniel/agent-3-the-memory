@@ -1,13 +1,14 @@
-import asyncio
 import logging
 from pathlib import Path
 
 import jinja2
 import yaml
-from google_adk import LlmAgent
+from google.adk import Agent as LlmAgent
+from google.adk.runners import Runner
+from google.genai import types
 
 from src.memory_gateway import LongTermMemoryGateway
-from src.session_gateway import NegotiationSessionGateway
+from src.session_gateway import APP_NAME, USER_ID, NegotiationSessionGateway
 
 logger = logging.getLogger(__name__)
 
@@ -48,8 +49,13 @@ class StatefulFinanceAgent:
 
         self.llm_agent = LlmAgent(
             name="StatefulAutoFinanceNegotiator",
-            model="gemini-1.5-pro-001",
-            system_instruction="Você é um negociador de financiamentos. O contexto será dinamicamente injetado.",
+            model="gemini-2.0-flash",
+            instruction="Voce e um negociador de financiamentos. O contexto sera dinamicamente injetado.",
+        )
+        self.runner = Runner(
+            app_name=APP_NAME,
+            agent=self.llm_agent,
+            session_service=self.session_gw.service,
         )
 
     async def process_message(
@@ -70,26 +76,35 @@ class StatefulFinanceAgent:
             rejection_count=state.rejection_count,
             customer_tier=state.customer_tier,
         )
-        self.llm_agent.system_instruction = system_prompt
+        self.llm_agent.instruction = system_prompt
 
         contextual_prompt = customer_message
         if state.funnel_stage in ("rate_proposed", "analyzing_credit"):
-            insights = await self.memory_gw.search_customer_insights(query=f"Sessão: {session_id}")
+            insights = await self.memory_gw.search_customer_insights(query=f"Sessao: {session_id}")
             if insights:
                 contextual_prompt = self.injector_template.render(
                     base_prompt=customer_message,
                     long_term_insights=insights,
                 )
 
-        response = await asyncio.to_thread(
-            self.llm_agent.invoke,
-            contextual_prompt,
-            session=adk_session,
+        new_message = types.Content(
+            role="user",
+            parts=[types.Part(text=contextual_prompt)],
         )
+        response_text = ""
+        async for event in self.runner.run_async(
+            user_id=USER_ID,
+            session_id=session_id,
+            new_message=new_message,
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if getattr(part, "text", None):
+                        response_text = part.text
 
         state.increment_rejection(max_rejections=self._max_rejections)
         if state.funnel_stage == "human_handoff":
-            pass  # Handoff já refletido no state
+            pass  # Handoff ja refletido no state
         await self.session_gw.save_checkpoint(adk_session, state)
 
-        return response.text
+        return response_text

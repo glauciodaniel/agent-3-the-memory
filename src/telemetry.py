@@ -41,14 +41,14 @@ class FinOpsTelemetry:
         from rich.console import Console
         from rich.table import Table
 
-        console = Console()
-        table = Table(title="💰 FinOps: Custo de Memória (Por Request)")
+        console = Console(force_terminal=True)
+        table = Table(title="FinOps: Custo de Memoria (Por Request)")
         table.add_column("Abordagem", justify="left")
         table.add_column("Custo USD", justify="right")
         table.add_column("Tokens Estimados", justify="right")
 
-        table.add_row("❌ Amnésico (Histórico Completo)", f"${amnesic:.6f}", str(self.config["amnesic_payload_tokens"]))
-        table.add_row("✅ Stateful (ADK Checkpoint + Vetorial)", f"${stateful_cost:.6f}", "~500")
+        table.add_row("Amnesico (Historico Completo)", f"${amnesic:.6f}", str(self.config["amnesic_payload_tokens"]))
+        table.add_row("Stateful (ADK Checkpoint + Vetorial)", f"${stateful_cost:.6f}", "~500")
         table.add_row(
             "[bold green]Economia (FinOps)[/bold green]", f"[bold green]${savings:.6f} (-{pct:.1f}%)[/bold green]", ""
         )

@@ -28,17 +28,36 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## 🛠️ Configuração do Google Cloud (Necessário na Masterclass)
-Para operar contra a infraestrutura do Google Vertex AI provida para o Lab:
+## 🛠️ Configuração do Google Cloud e do modelo LLM
+
+O agente usa o **Google ADK** com Gemini. É obrigatório configurar uma das opções abaixo.
+
+### Opção A – Google AI (API Key, ideal para desenvolvimento local)
+
+Crie uma API key em [Google AI Studio](https://aistudio.google.com/apikey) e defina:
 
 ```bash
-gcloud auth login --update-adc
+export GOOGLE_API_KEY="sua-api-key"
+```
+
+Ou no `.env`:
+```
+GOOGLE_API_KEY=sua-api-key
+```
+
+### Opção B – Vertex AI (projeto GCP, usado na Masterclass)
+
+Para usar Vertex AI com Application Default Credentials:
+
+```bash
+gcloud auth application-default login
+export GOOGLE_GENAI_USE_VERTEXAI=1
 export GOOGLE_CLOUD_PROJECT="banco-auto-finance-lab-01"
-export GOOGLE_CLOUD_REGION="us-central1"
+export GOOGLE_CLOUD_LOCATION="us-central1"
 export VECTOR_SEARCH_ENDPOINT_ID="<ID_FORNECIDO_NA_AULA>"
 ```
 
-*(Nota: Se rodado sem as variáveis de ambiente, o código usará Mocks em memória e exibirá alertas.)*
+*(Sem variáveis de sessão/Vector Search, o código usa mocks em memória e exibe avisos. Sem API key nem Vertex configurado, o modelo Gemini retorna erro de autenticação.)*
 
 ## 🧑‍💻 Execução Local e Testes
 
