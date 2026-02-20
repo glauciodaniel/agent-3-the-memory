@@ -1,0 +1,21 @@
+# Configurações de Política de Memória e FinOps
+
+finops:
+  # Custo aproximado por 1k tokens
+  cost_per_1k_input: 0.00125  # gemini-1.5-pro
+  cost_per_1k_output: 0.00500 # gemini-1.5-pro
+  
+  # Quantidade de tokens de um histórico completo (amnésico) para base de comparação
+  amnesic_payload_tokens: 10000
+
+vector_search:
+  # Limite máximo de documentos retornados na busca
+  max_documents: 3
+  # Score mínimo de similaridade para considerar o histórico relevante
+  min_similarity_score: 0.70
+
+session:
+  # Tempo de vida do checkpoint da sessão em horas (ex: abandono de carrinho)
+  ttl_hours: 48
+  # Limite de recusas antes do Circuit Breaker (Handoff humano). Ajustável sem deploy.
+  max_rejections: 3

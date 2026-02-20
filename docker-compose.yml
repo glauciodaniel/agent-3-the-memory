@@ -1,0 +1,9 @@
+services:
+  agent:
+    build: .
+    env_file: .env
+    volumes:
+      - ./config:/app/config:ro
+    # Variáveis podem ser sobrescritas aqui, ex. para mock:
+    # environment:
+    #   USE_MOCK: "true"

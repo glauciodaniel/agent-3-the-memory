@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agente-3-the-memory"
+version = "1.0.0"
+description = "Agente de IA stateful com memória curta/longa prazo, FSM e FinOps (Google ADK)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "google-adk==1.25.0",
+    "google-cloud-aiplatform==1.138.0",
+    "pydantic==2.11.5",
+    "PyYAML==6.0.2",
+    "tiktoken==0.8.0",
+    "rich==13.9.4",
+    "Jinja2==3.1.5",
+    "tenacity==9.1.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==7.4.0",
+    "pytest-asyncio==0.23.0",
+    "ruff==0.9.10",
+    "pre-commit==4.1.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+addopts = "-v"
