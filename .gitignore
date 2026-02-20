@@ -46,3 +46,9 @@ Thumbs.db
 # Project-specific
 *.log
 nul
+
+
+docs/*.md
+!docs/LAB-GUIADO-01-DETECCAO-RECUSA-LLM.md
+
+index.html

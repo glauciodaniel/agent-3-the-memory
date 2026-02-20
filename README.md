@@ -72,4 +72,5 @@ pytest tests/ -v
 ```
 
 ## 📚 Documentação Adicional
-Consulte o arquivo [LAB-DESAFIO.md](LAB-DESAFIO.md) para as instruções do desafio hand-on e detalhes de FinOps.
+- **Lab guiado:** [Detecção de recusa pelo LLM](docs/LAB-GUIADO-01-DETECCAO-RECUSA-LLM.md) — passo a passo para implementar resposta estruturada e atualização condicional da FSM.
+- **Desafio hands-on:** [LAB-DESAFIO.md](LAB-DESAFIO.md) — instruções do desafio e detalhes de FinOps.
