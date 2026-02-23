@@ -53,10 +53,13 @@ def embed_texts(
     return [_mock_embed(t) for t in texts]
 
 
-def _mock_embed(text: str, dim: int = 128) -> list[float]:
-    """Vetor determinístico por hash do texto (reprodutível para testes)."""
+def _mock_embed(text: str, dim: int = 768) -> list[float]:
+    """Vetor determinístico por hash do texto (reprodutível para testes). Dimensão 768 para compatibilidade com Vertex (text-multilingual-embedding-002)."""
     h = hashlib.sha256(text.encode("utf-8")).hexdigest()
-    return [(int(h[i : i + 2], 16) / 255.0 - 0.5) for i in range(0, min(dim * 2, len(h) - 1), 2)][:dim]
+    base = [(int(h[i : i + 2], 16) / 255.0 - 0.5) for i in range(0, min(64, len(h) - 1), 2)]
+    while len(base) < dim:
+        base = (base * ((dim // len(base)) + 1))[:dim]
+    return base
 
 
 def _embed_vertex(
